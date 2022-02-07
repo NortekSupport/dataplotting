@@ -10,8 +10,8 @@ clear FILTERINDEX PATHNAME
 % Import velocity and sensor data
 dat = importdata(strcat(FILENAME(1:end-4),'.dat'));
 datsize = size(dat);
-if datsize(2)==23
-    Datetime = datenum(dat(:,3),dat(:,1),dat(:,2),dat(:,4),dat(:,5),dat(:,6));
+Datetime = datenum(dat(:,3),dat(:,1),dat(:,2),dat(:,4),dat(:,5),dat(:,6));
+if datsize(2)==23 | datsize(2)==25
     Error = dat(:,7);
     Status = dat(:,8);
     Vel1 = dat(:,9);
@@ -29,29 +29,11 @@ if datsize(2)==23
     Temperature = dat(:,21);
     AnalogIn1 = dat(:,22);
     AnalogIn2 = dat(:,23);
-elseif datsize(2)==25
-    Datetime = datenum(dat(:,3),dat(:,1),dat(:,2),dat(:,4),dat(:,5),dat(:,6));
-    Error = dat(:,7);
-    Status = dat(:,8);
-    Vel1 = dat(:,9);
-    Vel2 = dat(:,10);
-    Vel3 = dat(:,11);
-    Amp1 = dat(:,12);
-    Amp2 = dat(:,13);
-    Amp3 = dat(:,14);
-    Battery = dat(:,15);
-    Soundspeed = dat(:,16);
-    Heading = dat(:,17);
-    Pitch = dat(:,18);
-    Roll = dat(:,19);
-    Pressure = dat(:,20);
-    Temperature = dat(:,21);
-    AnalogIn1 = dat(:,22);
-    AnalogIn2 = dat(:,23);
-    Speed = dat(:,24);
-    Direction = dat(:,25);
+    if datsize(2)==25
+        Speed = dat(:,24);
+        Direction = dat(:,25);
+    end
 elseif datsize(2)==32
-    Datetime = datenum(dat(:,3),dat(:,1),dat(:,2),dat(:,4),dat(:,5),dat(:,6));
     Burst = dat(:,7);
     Ensemble = dat(:,8);
     Error = dat(:,9);
@@ -84,18 +66,18 @@ end
 if exist(strcat(FILENAME(1:end-4),'.dia'))==2;
     dia = importdata(strcat(FILENAME(1:end-4),'.dia'));
     diasize = size(dia);
+    dDatetime = datenum(dia(:,3),dia(:,1),dia(:,2),dia(:,4),dia(:,5),dia(:,6));
+    dError = dia(:,7);
+    dStatus = dia(:,8);
+    dVel1 = dia(:,9);
+    dVel2 = dia(:,10);
+    dVel3 = dia(:,11);
+    dAmp1 = dia(:,12);
+    dAmp2 = dia(:,13);
+    dAmp3 = dia(:,14);
+    dBattery = dia(:,15);
+    dSoundspeed = dia(:,16);
     if diasize(2)==25
-        dDatetime = datenum(dia(:,3),dia(:,1),dia(:,2),dia(:,4),dia(:,5),dia(:,6));
-        dError = dia(:,7);
-        dStatus = dia(:,8);
-        dVel1 = dia(:,9);
-        dVel2 = dia(:,10);
-        dVel3 = dia(:,11);
-        dAmp1 = dia(:,12);
-        dAmp2 = dia(:,13);
-        dAmp3 = dia(:,14);
-        dBattery = dia(:,15);
-        dSoundspeed = dia(:,16);
         dHeading = dia(:,17);
         dPitch = dia(:,18);
         dRoll = dia(:,19);
@@ -106,17 +88,6 @@ if exist(strcat(FILENAME(1:end-4),'.dia'))==2;
         dSpeed = dia(:,24);
         dDirection = dia(:,25);
     elseif diasize(2)==27
-        dDatetime = datenum(dia(:,3),dia(:,1),dia(:,2),dia(:,4),dia(:,5),dia(:,6));
-        dError = dia(:,7);
-        dStatus = dia(:,8);
-        dVel1 = dia(:,9);
-        dVel2 = dia(:,10);
-        dVel3 = dia(:,11);
-        dAmp1 = dia(:,12);
-        dAmp2 = dia(:,13);
-        dAmp3 = dia(:,14);
-        dBattery = dia(:,15);
-        dSoundspeed = dia(:,16);
         dSoundspeedUsed = dia(:,17);
         dHeading = dia(:,18);
         dPitch = dia(:,19);
@@ -182,8 +153,8 @@ legend([h1;h2;h3],'Roll','Pitch','Heading',...
 datetick
 xlim([min(Datetime) max(Datetime)])
 xlabel('Datetime')
-ylabel('Tilt (°)')
-set(get(ax2(2),'Ylabel'),'String','Heading (°)')
+ylabel('Tilt (Â°)')
+set(get(ax2(2),'Ylabel'),'String','Heading (Â°)')
 title(strcat(FILENAME(1:end-4),' position'))
 
 % Plot temperature and pressure
@@ -196,7 +167,7 @@ legend([h1;h2],'Temperature','Pressure',...
 datetick
 xlim([min(Datetime) max(Datetime)])
 xlabel('Datetime')
-ylabel('Temperature (°C)')
+ylabel('Temperature (Â°C)')
 set(get(ax(2),'Ylabel'),'String','Pressure (dbar)')
 title(strcat(FILENAME(1:end-4),' environment'));
 
@@ -254,8 +225,8 @@ if exist('dia')
     datetick
     xlim([min(Datetime) max(Datetime)])
     xlabel('Datetime')
-    ylabel('Tilt (°)')
-    set(get(ax2(2),'Ylabel'),'String','Heading (°)')
+    ylabel('Tilt (Â°)')
+    set(get(ax2(2),'Ylabel'),'String','Heading (Â°)')
     title(strcat(FILENAME(1:end-4),' diagnostic position'))
 
     % Plot diagnostic temperature and pressure
@@ -270,11 +241,7 @@ if exist('dia')
     datetick
     xlim([min(dDatetime) max(dDatetime)])
     xlabel('Datetime')
-    ylabel('Temperature (°C)')
+    ylabel('Temperature (Â°C)')
     set(get(ax(2),'Ylabel'),'String','Pressure (dbar)')
     title(strcat(FILENAME(1:end-4),' diagnostic environment'));
 end
-
-
-
-
